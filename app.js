@@ -8,15 +8,19 @@ function app(people){
   switch(searchType){
     case 'yes':
     // TODO: search by name
-    var foundPerson = searchByName(people);
+    searchByName(people);
+     var foundPerson = searchByName(people);
+     mainMenu(foundPerson, data)
     break;
     case 'no':
     // TODO: search by traits
     var foundPerson = searchByTraits(people);
+    mainMenu(foundPerson, data)
     break;
     default:
     app(people); // restart app
     break;
+    
   }
 }
 
@@ -35,9 +39,11 @@ function mainMenu(person, people){
   switch(displayOption){
     case "info":
     // TODO: get person's info
+    displayInfo();
     break;
     case "family":
     // TODO: get person's family
+    displayFamily();
     break;
     case "descendants":
     // TODO: get person's descendants
@@ -58,26 +64,82 @@ function searchByName(people){
 
   var foundPerson = people.filter(function(person){
     if(person.firstName === firstName && person.lastName === lastName){
-      return true;
+      window.alert(foundPerson);
     }
     else{
       return false;
     }
   })
   // TODO: find the person using the name they entered
-  return foundPerson;
+  alert(person);
 }
 
 function searchByTraits(people){
-  var height = promptFor("What is the person's height?", chars);
-  var eyeColor = promptFor("What is the person's eye color?", chars);
-  var weight = promptFor("What is the person's weight?", chars);
-  var occupation = promptFor("What is the person's occupation?", chars);
-  var age = promptFor("What is the person's date of birth? mm/dd/yyyy", chars);
-}
+  knowHeight = promptFor("Do you know the person's height? yes or no", chars.toLowerCase);
+  knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", chars.ToLowerCase);
+  knowWeight = promptFor("Do you know the person's weight? yes or no", chars.toLowerCase);
+  knowOccupation = promptFor("Do you know the person's occupation? yes or no".toLowerCase);
+  knowAge = promptFor("Do you know the person's age? yes or no".toLowerCase);
+
+      if (knowHeight == "yes")
+      {
+          height = promptFor("What is the person's height in inches? 1 foot = 12 inches");
+          personfilter = people.filter(function(person) {
+            if (person.height == height){
+              return true;
+            } else {
+              return false;
+            }
+          });
+        }
+      if(knowEyeColor == "yes")
+      {
+        eyeColor = promptFor("What is the person's eyecolor?", chars.toLowerCase);
+        personfilter = people.filter(function(person){
+          if(person.eyeColor == color){
+            return true;
+          } else {
+            return false;
+          }
+        });
+      }      
+     if(knowWeight == "yes") 
+     {
+          weight = promptFor("What is the person's weight?", chars.toLowerCase);
+          personfilter = people.filter(function(person){
+          if(person.weight == weight){
+            return true;
+          } else {
+            return false;
+          }
+        });
+     }
+    if(knowOccupation == yes)
+    { 
+          occupation = promptFor("What is the person's weight?", chars.toLowerCase);
+          personfilter = people.filter(function(person){
+          if(person.occupation == occupation){
+            return true;
+          } else {
+            return false;
+          }
+        });
+      }
+    if(knowAge == yes)
+     {
+        age = promptFor("What is the person's age?", chars.toLowerCase);
+        personfilter = people.filter(function(person){
+        if(person.age == yes){
+          return true;
+        } else {
+      return false;
+        }
+      });
+    }
+  }
 
 function findDateOfBirth(people){
- var birthday = searchByTraits.age; 
+ var birthday = searchByTraits(people).age; 
  var dob = people.filter(function(person){
    if(person.birthday == dob){
      return true;
@@ -88,18 +150,30 @@ function findDateOfBirth(people){
   })
 }
 
+
+/** 
 function getAge(people){
   var date = findDateOfBirth.dob;
-  var todaysDate = new Date();
-  var age = todaysDate - date.toString();
-}
+  var diff = new Date - new Date(date);
+  var  dateSplit = date.split("/");
+  var todaysDate = new Date(day, month, year)
+  
 
+
+  for(var i = 0; i < people.length; i++){
+
+}
+ 
 function findDescendants(person, people){
   
 }
 
+ */
+
 // alerts a list of people
-function displayPeople(people){
+
+
+function displayFamily(people){
   alert(people.map(function(person){
     return person.firstName + " " + person.lastName;
   }).join("\n"));
