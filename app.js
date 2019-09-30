@@ -64,14 +64,14 @@ function searchByName(people){
 
   var foundPerson = people.filter(function(person){
     if(person.firstName === firstName && person.lastName === lastName){
-      window.alert(foundPerson);
+      return true;
     }
     else{
       return false;
     }
-  })
+  });
   // TODO: find the person using the name they entered
-  alert(person);
+  return foundPerson[0];
 }
 
 function searchByTraits(people){
@@ -136,6 +136,7 @@ function searchByTraits(people){
         }
       });
     }
+    //return person by 2 or more criteria
   }
 
 function findDateOfBirth(people){
@@ -149,7 +150,6 @@ function findDateOfBirth(people){
     }
   })
 }
-
 
 /** 
 function getAge(people){
@@ -171,7 +171,6 @@ function findDescendants(person, people){
  */
 
 // alerts a list of people
-
 
 function displayFamily(people){
   alert(people.map(function(person){
