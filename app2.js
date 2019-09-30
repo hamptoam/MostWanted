@@ -67,78 +67,92 @@ function searchByName(people){
  return foundPerson[0];
 }
 
-  // TODO: find the person using the name they entered
- 
-
-
 function searchByTraits(people){
-    knowGender = promptFor("Do you know the person's gender? yes or no", chars);
-    age = promptFor("What is the person's age?", chars);
-    knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", chars);
-    knowWeight = promptFor("Do you know the person's weight? yes or no", chars);
-    knowOccupation = promptFor("Do you know the person's occupation? yes or no", chars);
-   
-  
-        if (knowgender == "yes")
-        {
-            height = promptFor("Do you know the person's gender?", chars);
-            personGender = people.filter(function(person) {
-              if (person.gender == gender){
-                return;
-              } else {
-                return false;
-              }
-            });
+    knowGender = promptFor("Do you know the person's gender? yes or no", yesNo);
+    knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", yesNo);
+    knowWeight = promptFor("Do you know the person's weight? yes or no", yesNo);
+    knowOccupation = promptFor("Do you know the person's occupation? yes or no", yesNo);
+      //knowAge = promptFor("Do you know the person's age?", yesNo);
+    if (knowGender == "yes")
+    {
+        gender = promptFor("What is their gender?", chars).toLowerCase();
+       
+        personGender = people.filter(function(person) {
+          if (person.gender == gender){
+            console.log(person.firstName);
+            return true;
+          } else {
+            return false;
           }
-        if(knowAge == yes)
+        });
+        if (personGender.length == 1)
         {
-            
-            personAge = personGender.filter(function(person){
-             if(person.age == yes){
-               return true;
-             } else {
-               return false;
-             }
-           });
-         }
+            foundPerson = personGender[0];
+            console.log(foundPerson);
+            displayPerson(foundPerson);
+        }
+      }
         if(knowEyeColor == "yes")
         {
-          eyeColor = promptFor("What is the person's eyecolor?", chars.toLowerCase);
-          personEyeColor = personAge.filter(function(person){
+          color = promptFor("What is the person's eyecolor?", chars).toLowerCase();
+          personEyeColor = personGender.filter(function(person){
             if(person.eyeColor == color){
+              console.log(person.firstName);
               return true;
             } else {
               return false;
             }
           });
+          if (personEyeColor.length == 1)
+          {
+              foundPerson = personEyeColor[0];
+              console.log(foundperson);
+              displayPerson(foundPerson);
+          }
         }      
        if(knowWeight == "yes") 
        {
-            weight = promptFor("What is the person's weight?", chars.toLowerCase);
+            weight = promptFor("What is the person's weight?", chars).toLowerCase();
             personWeight = personEyeColor.filter(function(person){
-            if(person.weight == weight){
+            if(person.weight == weight)
+            {
+              console.log(person.firstName);
               return true;
             } else {
               return false;
             }
           });
+          if(personWeight.length == 1)
+          {
+            foundPerson = personWeight[0];
+            console.log(foundPerson);
+            return(foundPerson);
+          }
        }
-      if(knowOccupation == yes)
+      if(knowOccupation == "yes")
       { 
-            personOccupation = promptFor("What is the person's weight?", chars.toLowerCase);
-            personfilter = personWeight.filter(function(person){
+            occupation = promptFor("What is the person's weight?", chars).toLowerCase();
+            personOccupation= personWeight.filter(function(person){
             if(person.occupation == occupation){
+              console.log(person.firstName);
               return true;
             } else {
               return false;
             }
           });
+          if(personOccupation.length == 1)
+          {
+            foundPerson = personOccupation[0];
+            console.log(foundPerson);
+            return(foundPerson);
+          }
         }
-   
-      //return person by 2 or more criteria
+      if (foundPerson == null)
+      {
+          return mainMenu(person, people);
+      }
     }
   
-
 function findAge(people){
  var birthday = searchByTraits.age; 
  var dob = people.filter(function(person){
@@ -148,7 +162,7 @@ function findAge(people){
     else{
       return false;
     }
-  })
+  });
 }
 
 // alerts a list of people
@@ -159,17 +173,16 @@ function displayPeople(people){
 }
 
 function displayPerson(person){
-  // print all of the information about a person:
-  // height, weight, age, name, occupation, eye color.
-  var personInfo = "First Name: " + person.firstName + "\n";
-  personInfo += "Last Name: " + person.lastName + "\n";
+   var personInfo = "First Name: " + person.firstName + "\n";
+   personInfo += "Last Name: " + person.lastName + "\n";
   // TODO: finish getting the rest of the information to display
- // personInfo += "Height:" + person.height; +"\n";
-  //personInfo += "Weight" + person.weight; +"\n";
-  //personInfo += "Age:" + person.age; +"\n";
- // personInfo += "Occupation:" + person.occupation; +"\n";
-  //personInfo += "Eye Color:" + person.eyeColor; +"\n";
+   personInfo += "Height:" + person.height; +"\n";
+   personInfo += "Weight" + person.weight; +"\n";
+   personInfo += "Age:" + person.age; +"\n";
+   personInfo += "Occupation:" + person.occupation; +"\n";
+   personInfo += "Eye Color:" + person.eyeColor; +"\n";
   alert(personInfo);
+  return(personInfo);
 }
 
 // function that prompts and validates user input
