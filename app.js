@@ -10,17 +10,16 @@ function app(people){
     // TODO: search by name
     searchByName(people);
      var foundPerson = searchByName(people);
-     mainMenu(foundPerson, data)
+     mainMenu(foundPerson, people);
     break;
     case 'no':
     // TODO: search by traits
     var foundPerson = searchByTraits(people);
-    mainMenu(foundPerson, data)
+    mainMenu(foundPerson, people);
     break;
     default:
     app(people); // restart app
     break;
-    
   }
 }
 
@@ -39,7 +38,7 @@ function mainMenu(person, people){
   switch(displayOption){
     case "info":
     // TODO: get person's info
-    displayInfo();
+    displayPerson(person);
     break;
     case "family":
     // TODO: get person's family
@@ -75,70 +74,80 @@ function searchByName(people){
 }
 
 function searchByTraits(people){
-  knowHeight = promptFor("Do you know the person's height? yes or no", chars.toLowerCase);
-  knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", chars.ToLowerCase);
-  knowWeight = promptFor("Do you know the person's weight? yes or no", chars.toLowerCase);
-  knowOccupation = promptFor("Do you know the person's occupation? yes or no".toLowerCase);
-  knowAge = promptFor("Do you know the person's age? yes or no".toLowerCase);
+  knowHeight = promptFor("Do you know the person's height? yes or no", yesNo);
+  knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", yesNo);
+  knowWeight = promptFor("Do you know the person's weight? yes or no", yesNo);
+  knowOccupation = promptFor("Do you know the person's occupation? yes or no".yesNo);
+  knowAge = promptFor("Do you know the person's age? yes or no".yesNo);
 
-      if (knowHeight == "yes")
-      {
-          height = promptFor("What is the person's height in inches? 1 foot = 12 inches");
-          personfilter = people.filter(function(person) {
-            if (person.height == height){
-              return true;
-            } else {
-              return false;
-            }
-          });
-        }
-      if(knowEyeColor == "yes")
-      {
-        eyeColor = promptFor("What is the person's eyecolor?", chars.toLowerCase);
-        personfilter = people.filter(function(person){
-          if(person.eyeColor == color){
-            return true;
-          } else {
-            return false;
-          }
-        });
-      }      
-     if(knowWeight == "yes") 
-     {
-          weight = promptFor("What is the person's weight?", chars.toLowerCase);
-          personfilter = people.filter(function(person){
-          if(person.weight == weight){
-            return true;
-          } else {
-            return false;
-          }
-        });
-     }
-    if(knowOccupation == yes)
-    { 
-          occupation = promptFor("What is the person's weight?", chars.toLowerCase);
-          personfilter = people.filter(function(person){
-          if(person.occupation == occupation){
-            return true;
-          } else {
-            return false;
-          }
-        });
-      }
-    if(knowAge == yes)
-     {
-        age = promptFor("What is the person's age?", chars.toLowerCase);
-        personfilter = people.filter(function(person){
-        if(person.age == yes){
+    if (knowGender == "yes")
+    {
+      gender = promptFor("What is their gender?", chars);
+     
+      personGender = people.filter(function(person) {
+        if (person.gender == gender){
+          console.log(person.firstName);
           return true;
         } else {
-      return false;
+          return false;
         }
       });
+      if (personGender.length == 1)
+      {
+          foundPerson = personGender[0];
+          mainMenu(foundPerson);
+      }
+    }   
+    if(knowEyeColor == "yes")
+    {
+      eyeColor = promptFor("What is the person's eyecolor?", chars.yesNo);
+      personfilter = people.filter(function(person){
+      if(person.eyeColor == color){
+        return true;
+      } else {
+        return false;
+      }
+    });
+      if (personEyeColor.length == 1)
+      {
+          foundPerson = personEyeColor[0];
+          return mainMenu(person);
+      }
+    }      
+    if(knowWeight == "yes") 
+    {
+      weight = promptFor("What is the person's weight?", chars.yesNo);
+      personfilter = people.filter(function(person){
+        if(person.weight == weight){
+          return true;
+        } else {
+          return false;
+        }
+     });
+     if(personWeight.length == 1)
+     {
+       foundPerson = personWeight[0];
+       return mainMenu(person);
+     }
     }
-    //return person by 2 or more criteria
-  }
-
+    if(knowOccupation == yes)
+    { 
+      occupation = promptFor("What is the person's weight?", chars.yesNo);
+      personfilter = people.filter(function(person){
+      if(person.occupation == occupation){
+         return true;
+        } else {
+            return false;
+        }
+        });
+        if(personOccupation.length == 1)
+        {
+          foundPerson = personOccupation[0];
+          mainMenu(foundPerson);
+        }
+    }
+    return mainMenu(foundPerson);
+}
 function findDateOfBirth(people){
  var birthday = searchByTraits(people).age; 
  var dob = people.filter(function(person){
@@ -148,7 +157,7 @@ function findDateOfBirth(people){
     else{
       return false;
     }
-  })
+  });
 }
 
 /** 
@@ -184,11 +193,11 @@ function displayPerson(person){
   var personInfo = "First Name: " + person.firstName + "\n";
   personInfo += "Last Name: " + person.lastName + "\n";
   // TODO: finish getting the rest of the information to display
-  personInfo += "Height:" + person.height; +"\n";
-  personInfo += "Weight" + person.weight; +"\n";
-  personInfo += "Age:" + person.age; +"\n";
-  personInfo += "Occupation:" + person.occupation; +"\n";
-  personInfo += "Eye Color:" + person.eyeColor; +"\n"; 
+  personInfo += "Height:" + person.height  +"\n";
+  personInfo += "Weight" + person.weight  +"\n";
+  personInfo += "Age:" + person.age  +"\n";
+  personInfo += "Occupation:" + person.occupation  +"\n";
+  personInfo += "Eye Color:" + person.eyeColor  +"\n"; 
   alert(personInfo);
 }
 
@@ -199,13 +208,14 @@ function promptFor(question, valid){
   } while(!response || !valid(response));
   return response;
 }
-
 // helper function to pass into promptFor to validate yes/no answers
 function yesNo(input){
-  return input.toLowerCase() == "yes" || input.toLowerCase() == "no";
+  return input.yesNo() == "yes" || input.yesNo() == "no";
 }
 
 // helper function to pass in as default promptFor validation
 function chars(input){
   return true; // default validation only
 }
+
+
