@@ -176,12 +176,13 @@ function getAge(person) {
   return age;
 }
 
-function findSpouse(people, person) {
-  var person = searchByTraits.foundPerson;
-  var spouseId = person.currentSpouse;
+
+function findSpouse(people, foundPerson) {
+  var spouse = foundPerson;
   for(var i = 0; i < people; i++){
-    var partner = people.filter(function(person){
-    if (spouseId === person.id){
+    var partner = people.filter(function(spousePerson){
+    if (spouse.id === spousePerson.id){
+      var partner = spousePerson;
       console.log(partner);
       return partner;
     } else {
@@ -192,24 +193,27 @@ function findSpouse(people, person) {
   }
 }
 
-
-  
+var people;
+ 
 function findChildren(people, foundPerson){
   var foundChildren = [];
   var parent = foundPerson;
-  for(var i = 0; i <  child.parents.length; i++){
+  for(var i = 0; i <  people.length; i++){
       foundChildren = people.filter(function(childPerson) {
-      if (parent.id === child.parents[i]) {
+      if (parent.id === childPerson.parents[i]) {
+        foundChildren.push(childPerson);
         return true;
       } else {
         return false;
       }
      });
-     foundChildren.push(child)
-     alert(foundChildren.map(function(child) {
+     foreach(child in foundChildren)
+     {
+      alert(foundChildren.map(function(child) {
       namestring += child.firstName + " " + child.lastName + "\n";
       alert("Children"); 
      }));
+    }
     return foundChildren[i];
   }
 }
