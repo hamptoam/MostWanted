@@ -24,17 +24,20 @@ function mainMenu(person, people) {
     return app(people);
   }
 
-  var displayOption = prompt("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'");
+  var displayOption = prompt("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'spouse', 'children' or 'grandchildren'? Type the option you want or 'restart' or 'quit'");
 
   switch (displayOption) {
     case "info":
-      displayPerson(person);
+      displayPerson(person, people);
       break;
-    case "family":
-
+    case "spouse":
+      findSpouse(person, people);
       break;
-    case "descendants":
-
+    case "children":
+      FindChildren(person, people);
+      break;
+    case "grandchildren":
+      getDescendants(person, people);
       break;
     case "restart":
       app(people); // restart
@@ -43,7 +46,6 @@ function mainMenu(person, people) {
     case "quit":
       return; // stop execution
     default:
-
       return mainMenu(person, people); // ask again
   }
 }
@@ -53,7 +55,7 @@ function searchByName(people) {
   var lastName = promptFor("What is the person's last name?", chars);
 
 
-  var foundPerson = people.filter(function (person, data) {
+  var foundPerson = people.filter(function (person, people) {
     if (person.firstName === firstName && person.lastName === lastName) {
       return true;
     } else {
@@ -70,7 +72,7 @@ function searchByTraits(people) {
   knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", yesNo);
   knowWeight = promptFor("Do you know the person's weight? yes or no", yesNo);
   knowOccupation = promptFor("Do you know the person's occupation? yes or no", yesNo);
- 
+
   if (knowGender == "yes") {
     gender = promptFor("What is their gender?", chars).toLowerCase();
 
@@ -104,8 +106,8 @@ function searchByTraits(people) {
     if (people.length == 1) {
       var foundPerson = people[0];
     }
-  }   else {
-  return false;
+  } else {
+    return false;
   }
   if (knowEyeColor == "yes") {
     color = promptFor("What is the person's eyecolor?", chars).toLowerCase();
@@ -172,11 +174,66 @@ function getAge(person) {
   var age = today.getFullYear() - birthDate.getFullYear();
   var m = today.getMonth() - birthDate.getMonth();
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
+    age--;
   }
   console.log(age);
   return age;
 }
+
+function findSpouse(people, foundPerson) {
+  var spouseId = foundPerson.currentSpouse;
+  var partner = people.filter(function (person) {
+    if (person.id === spouseId) {
+      console.log(partner);
+      return partner;
+    } else {
+      return false;
+    }
+  });
+}
+
+
+/*
+ function findChildren(people, person) 
+{ 
+  let children = [];
+  var parentid = person.id;
+
+  var childs = people.filter(function(person){
+    for (var i = 0; i < childs.length; i++){
+      if(person.parents[0 || 1] === parentid) 
+      {
+       children.push(person);
+       return childs;
+      }else{
+          return false;
+      }
+    };
+    console.log(children);
+  });
+} */
+
+function FindChildren(oerson, people) {
+  var children = [];
+  var parent = foundPerson;
+  var findChildren;
+  // { 
+    for (let i = 0; i < people.length; i++) {
+       findChildren = people.map(function(person) {
+      if (parent.id === person.parents[0 || 1]) {
+        return true;
+      } else {
+        return false;
+      }
+     });
+     children.push(child)
+     alert(children.map(function(child) {
+      namestring += child.firstName + " " + child.lastName + "\n";
+      alert("Children"); 
+     }));
+    return findChildren;
+    }
+  }
 
 // alerts a list of people
 function displayPeople(people) {
