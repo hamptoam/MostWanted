@@ -66,7 +66,6 @@ function searchByName(people) {
 }
 
 function searchByTraits(people) {
-
   knowGender = promptFor("Do you know the person's gender? yes or no", yesNo);
   knowAge = promptFor("Do you know the person's age?", yesNo);
   knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", yesNo);
@@ -75,7 +74,6 @@ function searchByTraits(people) {
 
   if (knowGender == "yes") {
     gender = promptFor("What is their gender?", chars).toLowerCase();
-
     personGender = people.filter(function (person) {
       if (person.gender == gender) {
         console.log(person.firstName);
@@ -113,7 +111,6 @@ function searchByTraits(people) {
     color = promptFor("What is the person's eyecolor?", chars).toLowerCase();
     personEyeColor = people.filter(function (person) {
       if (person.eyeColor == color) {
-        console.log(person.firstName);
         return true;
       } else {
         return false;
@@ -122,7 +119,6 @@ function searchByTraits(people) {
     var people = personEyeColor;
     if (people.length == 1) {
       foundPerson = people[0];
-      console.log(foundperson);
       displayPerson(foundPerson);
     }
   }
@@ -138,10 +134,8 @@ function searchByTraits(people) {
     });
     var people = personWeight;
     if (personWeight.length == 1) {
-      var foundPerson = people[0];
-      /*foundPerson.dob;
-      GetAge(foundPerson.dob) */
-      console.log(foundPerson);
+      var foundPerson = people[0];    
+      displayPerson(foundPerson);
       return (foundPerson);
     }
   }
@@ -157,7 +151,7 @@ function searchByTraits(people) {
     });
     var people = personOccupation;
     if (people.length == 1) {
-      foundPerson = people[0];
+     var foundPerson = people[0];
       console.log(foundPerson);
       return (foundPerson);
     }
@@ -213,7 +207,7 @@ function findSpouse(people, foundPerson) {
   });
 } */
 
-function FindChildren(oerson, people) {
+function FindChildren(person, people) {
   var children = [];
   var parent = foundPerson;
   var findChildren;
@@ -242,16 +236,17 @@ function displayPeople(people) {
   }).join("\n"));
 }
 
-function displayPerson(person) {
-  var personInfo = "First Name: " + person.firstName + "\n";
-  personInfo += "Last Name: " + person.lastName + "\n";
+function displayPerson(foundPerson) {
+  var personInfo = "First Name: " + foundPerson.firstName + "\n";
+  personInfo += "Last Name: " + foundPerson.lastName + "\n";
   // TODO: finish getting the rest of the information to display
-  personInfo += "Height:" + person.height + "\n";
-  personInfo += "Weight" + person.weight + "\n";
-  personInfo += "Date of Birth:" + person.dob + "\n";
-  personInfo += "Occupation:" + person.occupation + "\n";
-  personInfo += "Eye Color:" + person.eyeColor + "\n";
+  personInfo += "Height:" + foundPerson.height + "\n";
+  personInfo += "Weight" + foundPerson.weight + "\n";
+  personInfo += "Date of Birth:" + foundPerson.dob + "\n";
+  personInfo += "Occupation:" + foundPerson.occupation + "\n";
+  personInfo += "Eye Color:" + foundPerson.eyeColor + "\n";
   alert(personInfo);
+  findSpouse(foundPerson);
   return (personInfo);
 }
 
