@@ -63,17 +63,9 @@ function searchByName(people) {
   return foundPerson[0];
 }
 
-function searchByTraits(people) {
-
-  knowGender = promptFor("Do you know the person's gender? yes or no", yesNo);
-  knowAge = promptFor("Do you know the person's age?", yesNo);
-  knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", yesNo);
-  knowWeight = promptFor("Do you know the person's weight? yes or no", yesNo);
-  knowOccupation = promptFor("Do you know the person's occupation? yes or no", yesNo);
-
+function searchByGender(people) {
   if (knowGender == "yes") {
     gender = promptFor("What is their gender?", chars).toLowerCase();
-
     personGender = people.filter(function (person) {
       if (person.gender == gender) {
         return true;
@@ -81,6 +73,69 @@ function searchByTraits(people) {
         return false;
       }
     });
+  }
+}
+
+function searchbyEyeColor(people){
+  if (knowEyeColor == "yes") {
+    color = promptFor("What is the person's eyecolor?", chars).toLowerCase();
+    personEyeColor = people.filter(function (person) {
+      if (person.eyeColor == color) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+}
+
+function searchByWeight(people){
+  if (knowWeight == "yes") {
+    weight = promptFor("What is the person's weight?", chars).toLowerCase();
+    personWeight = people.filter(function (person) {
+      if (person.weight == weight) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+}
+
+
+function getAge(person) {
+  var today = new Date();
+  var birthDate = new Date(person.dob);
+  var age = today.getFullYear() - birthDate.getFullYear();
+  var m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
+
+function searchByOccupation(people){
+  if (knowOccupation == "yes"){
+    occupation = promptFor("What is the person's occupation?", chars);
+    personOccupation = people.filter(function (person) {
+      if (person.occupation == occupation) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+}
+
+function searchByTraits(){
+  knowGender = promptFor("Do you know the person's gender? yes or no", yesNo);
+  knowAge = promptFor("Do you know the person's age?", yesNo);
+  knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", yesNo);
+  knowWeight = promptFor("Do you know the person's weight? yes or no", yesNo);
+  knowOccupation = promptFor("Do you know the person's occupation? yes or no", yesNo);
+}
+
+/*
     var people = personGender;
     if (people.length == 1) {
       var foundPerson = personGender[0];
@@ -107,15 +162,7 @@ function searchByTraits(people) {
   } else {
     return false;
   }
-  if (knowEyeColor == "yes") {
-    color = promptFor("What is the person's eyecolor?", chars).toLowerCase();
-    personEyeColor = people.filter(function (person) {
-      if (person.eyeColor == color) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+
     var people = personEyeColor;
     if (people.length == 1) {
       var foundPerson = people[0];
@@ -123,15 +170,6 @@ function searchByTraits(people) {
       return foundPerson;
     }
   }
-  if (knowWeight == "yes") {
-    weight = promptFor("What is the person's weight?", chars).toLowerCase();
-    personWeight = people.filter(function (person) {
-      if (person.weight == weight) {
-        return true;
-      } else {
-        return false;
-      }
-    });
     var people = personWeight;
     if (personWeight.length == 1) {
       var foundPerson = people[0];
@@ -139,15 +177,7 @@ function searchByTraits(people) {
       return foundPerson;
     }
   }
-  if (knowOccupation == "yes") {
-    occupation = promptFor("What is the person's occupation?", chars);
-    personOccupation = people.filter(function (person) {
-      if (person.occupation == occupation) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+
     var people = personOccupation;
     if (people.length == 1) {
       var foundPerson = people[0];
@@ -156,17 +186,8 @@ function searchByTraits(people) {
     }
   }
 }
+*/
 
-function getAge(person) {
-  var today = new Date();
-  var birthDate = new Date(person.dob);
-  var age = today.getFullYear() - birthDate.getFullYear();
-  var m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-}
 
 function findSpouse(foundPerson, people) {
   // "use strict" ; person = searchByTraits(foundPerson);
