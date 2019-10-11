@@ -1,4 +1,5 @@
-//when I use use strict statement I get an error saying too many errors. Oops.
+"use srtict";
+
 function app(people) {
   var searchType = promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo).toLowerCase();
   switch (searchType) {
@@ -9,8 +10,7 @@ function app(people) {
       break;
     case 'no':
       // TODO: search by traits
-      var foundPerson = searchByTraits(people);
-      mainMenu(foundPerson, people);
+      searchByGender(people);
       break;
     default:
       app(people); // restart app
@@ -54,7 +54,7 @@ function searchByName(people) {
   var firstName = promptFor("What is the person's first name?", chars);
   var lastName = promptFor("What is the person's last name?", chars);
 
-  var foundPerson = people.filter(function (person, data) {
+  var foundPerson = people.filter(function (person) {
     if (person.firstName === firstName && person.lastName === lastName) {
       return true;
     } else {
@@ -62,22 +62,16 @@ function searchByName(people) {
       return false;
     }
   });
-  return foundPerson[0];
-}
-
-function searchByTraits() {
-  knowGender = promptFor("Do you know the person's gender? yes or no", yesNo);
-  knowAge = promptFor("Do you know the person's age?", yesNo);
-  knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", yesNo);
-  knowWeight = promptFor("Do you know the person's weight? yes or no", yesNo);
-  knowOccupation = promptFor("Do you know the person's occupation? yes or no", yesNo);
+  var person = foundPerson[0];
+  return mainMenu(person);
 }
 
 function searchByGender(people) {
+  var knowGender = promptFor("Do you know the person's gender? yes or no", yesNo).toLowerCase();
   if (knowGender == "yes") {
-    gender = promptFor("What is their gender?", chars).toLowerCase();
+    var gender = promptFor("What is their gender?", chars).toLowerCase();
     personGender = people.filter(function (person) {
-      if (person.gender == gender) {
+      if (person.gender === gender) {
         return true;
       } else {
         alert("Not applicable");
@@ -85,10 +79,18 @@ function searchByGender(people) {
       }
     });
   }
+  if (personGender.length == 1) {
+    var foundPerson = personGender[i];
+    mainMenu(foundPerson, people);
+  } else {
+    searchbyEyeColor(personGender);
+  }
+  return personGender;
 }
 
 function searchbyEyeColor(people) {
-  var knowEyeColor = searchByTraits.knowEyeColor;
+  var people = searchByGender.personGender;
+  var knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", yesNo).toLowerCase();
   if (knowEyeColor == "yes") {
     color = promptFor("What is the person's eyecolor?", chars).toLowerCase();
     personEyeColor = people.filter(function (person) {
@@ -100,10 +102,65 @@ function searchbyEyeColor(people) {
       }
     });
   }
+  if (personEyeColor.length == 1) {
+    var foundPerson = personEyeColor[i];
+    mainMenu(foundPerson, people);
+  } else {
+    searchByAge(personEyeColor);
+  }
+  return personEyeColor;
 }
 
+function searchByAge(people) {
+  var people = searchByEyeColor.personEyeColor;
+  var peoplebyAge = [];
+  var knowAge = promptFor("Do you know the person's age?").toLowerCase();
+  if (knowAge == "yes") {
+    age = promptFor("What is their age?");
+    for (var i = 0; i < people.length; i++) {
+      var birthDate = new Date(person.dob);
+      var age = today.getFullYear() - birthDate.getFullYear();
+      var m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age;
+    }
+    if (person.age == knowAge)
+    {
+      console.log(person);
+      peoplebyAge.push(person);
+      if(peoplebyAge.length == 1)
+      {
+        var foundPerson = peopleByAge[0];
+        return mainMenu(foundPerson, people);
+      }
+    }
+  } else {
+    searchByWeight();
+  }
+}
+
+/*function getAge(age, person) {
+  var personAge = searchByAge.age;
+  var today = new Date();
+  for (var i = 0; i < people.length; i++) {
+    var birthDate = new Date(person.dob);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    if (person.age == personAge) {
+      console.log(person);
+    }
+    return age;
+  }
+} */
+
 function searchByWeight(people) {
-  var knowWeight = searchByTraits.knowWeight;
+  var people = searchByAge.personAge;
+  var knowWeight = promptFor("Do you know the person's weight? yes or no", yesNo).toLowerCase();
   if (knowWeight == "yes") {
     weight = promptFor("What is the person's weight?", chars).toLowerCase();
     personWeight = people.filter(function (person) {
@@ -114,11 +171,17 @@ function searchByWeight(people) {
         return false;
       }
     });
+    if (personWeight.length == 1) {
+      var foundPerson = personWeight[0];
+      mainMenu(foundPerson, people);
+    } else {
+      searchByOccupation(personWeight);
+    }
   }
 }
 
 function searchByOccupation(people) {
-  var knowOccupation = searchByTraits.knowOccupation;
+  var knowOccupation = promptFor("Do you know the person's occupation? yes or no", yesNo).toLowerCase();
   if (knowOccupation == "yes") {
     occupation = promptFor("What is the person's occupation?", chars);
     personOccupation = people.filter(function (person) {
@@ -129,34 +192,12 @@ function searchByOccupation(people) {
         return false;
       }
     });
+    if (personOccupation.length == 1) {
+      var foundPerson = personOccupation[0];
+      mainMenu(foundPerson, people);
+    }
+    return personOccupation;
   }
-}
-
-function filterTraits(people){
-
-var sortedPeople = searchByGender(personGender);
-var sortedPeople = searchbyEyeColor(personEyeColor);
-var sortedPeople = searchByAge(personAge);
-var sortedPeople = searchByWeight(personWeight);
-var sortedPeople = searchByOccupation(personOccupation);
-
-  if (sortedPeople.length == 1)
-  {
-    return sortedPeople[0]; 
-  } else {
-    alert("No match found");
-  }
-}
-
-function getAge(person) {
-  var today = new Date();
-  var birthDate = new Date(person.dob);
-  var age = today.getFullYear() - birthDate.getFullYear();
-  var m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
 }
 
 function findSiblings(foundPerson, people) {
@@ -166,109 +207,106 @@ function findSiblings(foundPerson, people) {
 
   for (var i = 0; i < people.length; i++) {
     var sibling = people.filter(function (person) {
-        if (personParents.parents === parentId) {
-          siblings.push(sibling);
-          return true;
-        }
-        if (sibling === null) {
-          alert(foundPerson.firstName + "has no siblings");
-          return mainMenu(foundPerson);
-        }
+      if (personParents.parents === parentId) {
+        siblings.push(sibling);
+        return true;
       }
-    );
-    foreach (sibling in siblings)
-    {
-      alert(sibling.firstName + " " + sibling.lastName);
-    }
-  }
-}
-
-  function findSpouse(foundPerson, people) {
-    // "use strict" ; person = searchByTraits(foundPerson);
-    var spouseId = foundPerson.currentSpouse;
-    var partner = people.filter(function (person) {
-      for (var i = 0; i < people.length; i++) {
-        if (person.id === spouseId) {
-          alert("Spouse is " + " " + person.firstName + " " + person.lastName);
-          return partner;
-        }
-        if (spouseId == null) {
-          alert(foundPerson.firstName + " " + "has no spouse");
-          return mainMenu(foundPerson);
-        }
+      if (sibling === null) {
+        alert(foundPerson.firstName + "has no siblings");
+        return mainMenu(foundPerson);
+      }
+      for (var i = 0; i < siblings.length; i++) {
+        alert(sibling.firstName + " " + sibling.lastName);
       }
     });
   }
+}
 
-  function findChildren(foundPerson, people) {
-    var foundChildren = [];
-    var parent = foundPerson;
+function findSpouse(foundPerson, people) {
+  // "use strict" ; person = searchByTraits(foundPerson);
+  var spouseId = foundPerson.currentSpouse;
+  var partner = people.filter(function (person) {
     for (var i = 0; i < people.length; i++) {
-      foundChildren = people.filter(function (childPerson) {
-        if (parent.id === childPerson.parents[i]) {
-          alert("Children: " + " " + childPerson.firstName + " " + childPerson.lastName);
-          foundChildren.push(childPerson);
-          return true;
-        } else {
-          alert("Person has no children");
-          return false;
-        }
-      });
+      if (person.id === spouseId) {
+        alert("Spouse is " + " " + person.firstName + " " + person.lastName);
+        return partner;
+      }
+      if (spouseId == null) {
+        alert(foundPerson.firstName + " " + "has no spouse");
+        return mainMenu(foundPerson);
+      }
     }
+  });
+}
+
+function findChildren(foundPerson, people) {
+  var foundChildren = [];
+  var parent = foundPerson;
+  for (var i = 0; i < people.length; i++) {
+    foundChildren = people.filter(function (childPerson) {
+      if (parent.id === childPerson.parents[i]) {
+        alert("Children: " + " " + childPerson.firstName + " " + childPerson.lastName);
+        foundChildren.push(childPerson);
+        return true;
+      } else {
+        alert("Person has no children");
+        return false;
+      }
+    });
   }
+}
 
-
-  /*function getDescendants(foundPerson, people)
-  {
-    for (var i = 0; i < foundChildren.length; i++) {
-      return findChildren(childPerson, foundChildren[i]);
-    }
-    if (childPerson == null) {
-      alert("Person has no grandchildren");
-    } else {
-      alert("GrandChild: " + childPerson.firstName + " " + childPerson.lastName);
-    }
-  } */
-
-  function displayPeople(people) {
-    alert(people.map(function (person) {
-      return person.firstName + " " + person.lastName;
-    }).join("\n"));
+/*function getDescendants(foundPerson, people)
+{
+  for (var i = 0; i < foundChildren.length; i++) {
+    return findChildren(childPerson, foundChildren[i]);
   }
-
-  function displayPerson(person) {
-    var personInfo = "First Name: " + person.firstName + "\n";
-    personInfo += "Last Name: " + person.lastName + "\n";
-    // TODO: finish getting the rest of the information to display
-    personInfo += "Height:" + person.height + "\n";
-    personInfo += "Weight" + person.weight + "\n";
-    personInfo += "Date of Birth:" + person.dob + "\n";
-    personInfo += "Occupation:" + person.occupation + "\n";
-    personInfo += "Eye Color:" + person.eyeColor + "\n";
-    personInfo += "Spouse: " + person.currentSpouse + "\n";
-    alert(personInfo);
-    return (personInfo);
+  if (childPerson == null) {
+    alert("Person has no grandchildren");
+  } else {
+    alert("GrandChild: " + childPerson.firstName + " " + childPerson.lastName);
   }
+} */
 
-  // function that prompts and validates user input
-  function promptFor(question, valid) {
-    do {
-      var response = prompt(question).trim();
-    } while (!response || !valid(response));
-    return response;
-  }
+function displayPeople(people) {
+  alert(people.map(function (person) {
+    return person.firstName + " " + person.lastName;
+  }).join("\n"));
+}
 
-  // helper function to pass into promptFor to validate yes/no answers
-  function yesNo(input) {
-    return input.toLowerCase() == "yes" || input.toLowerCase() == "no";
-  }
+function displayPerson(person) {
+  var personInfo = "First Name: " + person.firstName + "\n";
+  personInfo += "Last Name: " + person.lastName + "\n";
+  // TODO: finish getting the rest of the information to display
+  personInfo += "Height:" + person.height + "\n";
+  personInfo += "Weight" + person.weight + "\n";
+  personInfo += "Date of Birth:" + person.dob + "\n";
+  personInfo += "Occupation:" + person.occupation + "\n";
+  personInfo += "Eye Color:" + person.eyeColor + "\n";
+  personInfo += "Spouse: " + person.currentSpouse + "\n";
+  alert(personInfo);
+  return (personInfo);
+}
 
-  // helper function to pass in as default promptFor validation
-  function chars(input) {
-    return true; // default validation only
-  }
+// function that prompts and validates user input
+function promptFor(question, valid) {
+  do {
+    var response = prompt(question).trim();
+  } while (!response || !valid(response));
+  return response;
+}
 
-  /*
+// helper function to pass into promptFor to validate yes/no answers
+function yesNo(input) {
+  return input.toLowerCase() == "yes" || input.toLowerCase() == "no";
+}
+
+// helper function to pass in as default promptFor validation
+function chars(input) {
+  return true; // default validation only
+}
+
+/*
     var people = personGender;
     if (people.length == 1) {
       var foundPerson = personGender[0];
