@@ -73,83 +73,43 @@ function searchByName(people) {
     return foundPerson[0];
 }
 
-function searchBySingleTrait(people) {
-    var displayTrait = alert("What trait would you like to search by? Gender, Age, EyeColor, Weight or Occupation?").toLowerCase();
-
-    switch (displayTrait) {
-
-        case "gender":
-            var gender = promptFor("What is their gender?").toLowerCase();
-            searchByGender(gender);
-            var genderArray = searchByGender.genderArray;
-            for (var i = 0; i < genderArray.length; i++) {
-                alert(i.firstName + " " + i.lastName);
-            }
-            break;
-        case "age":
-            var age = promptFor("What is their age?").toLowerCase();
-            searchByAge(age);
-            var ageArray = searchByAge.ageArray;
-            for (var i = 0; i < ageArray.length; i++); {
-                alert(i.firstName + " " + i.lastName);
-            }
-            break;
-        case "eyecolor":
-            var eyeColor = promptFor("What is their eyecolor?").toLowerCase();
-            searchByEyeColor(eyeColor);
-            var eyeColorArray = searchByEyeColor.eyeColorArray;
-            for (var i = 0; i < eyeColorArray.length; i++); {
-                alert(i.firstName + " " + i.lastName);
-            }
-            break;
-        case "weight":
-            var weight = promptFor("What is their weight?", chars).toLowerCase();
-            searchByWeight(weight);
-            var weightArray = searchByWeight.weightArray;
-            for (var i = 0; i < weightArray.length; i++); {
-                alert(i.firstName + " " + i.lastName);
-            }
-            break;
-        case "occcupation":
-            var occupation = promptFor("What is their occupation?").toLowerCase();
-            searchByOccupation(occupation);
-            var occupationArray = searchByOccupation.occupationArray;
-            for (var i = 0; i < occupationArray.length; i++); {
-                alert(i.firstName + " " + i.lastName);
-            }
-            break;
+function genderList() {
+    var gender = promptFor("Which gender would you like to filter by?").toLowerCase();
+    var genderArray = searchByGender(gender);
+    for (var i = 0; i < genderArray.length; i++) {
+        alert(i.firstName + " " + i.lastName);
     }
-    return app(people);
 }
 
-function twoToFiveTraits(people) {
-    var searchFor = promptFor("Do you want to search for one person or multiple? 2 - 5").toLowerCase();
-    if (searchFor !== "2" || "3" || "4" || "5") {
-        alert("Please type in a number betweeen 2 and 5");
-        return searchFor;
+function ageList() {
+    var age = promptFor("Which age would you like to filter by?").toLowerCase();
+    var ageArray = searchByAge(age);
+    for (var i = 0; i < ageArray.length; i++); {
+        alert(i.firstName + " " + i.lastName);
     }
-    switch (searchFor) {
-    case "2":
-        var twoTraits = promptFor("What traits would you like to search by? Gender, eyeColor, age, weight, or occupation?").toLowerCase();
-        if (twoTraits !== "gender" || "eyecolor" || "age" || "weight" || "occupation") {
-            return twoTraits;
-        }
-        if (twoTraits == "gender" && "eyecolor") {
-          
-            
-        }
-        if (twoTraits == "gender" && "age") {
-          
-            
-        }
-        if (twoTraits == "gender" && "weight") {
-          
-            
-        }
-        if (twoTraits == "gender" && " occupation") {
-          
-            
-        }
+}
+
+function eyeColorList() {
+    var eyeColor = promptFor("What eye color would you like to filter by?").toLowerCase();
+    var eyeColorArray = searchByEyeColor(eyeColor);
+    for (var i = 0; i < eyeColorArray.length; i++); {
+        alert(i.firstName + " " + i.lastName);
+    }
+}
+
+function weightList() {
+    var weight = promptFor("What weight would you like to filter by?").toLowerCase();
+    var weightArray = searchByWeight(weight);
+    for (var i = 0; i < weightArray.length; i++); {
+        alert(i.firstName + " " + i.lastName);
+    }
+}
+
+function occupationList() {
+    var occupation = promptFor("What occupation would you like to filter by?").toLowerCase();
+    var occupationArray = searchByOccupation(occupation);
+    for (var i = 0; i < occupationArray.length; i++); {
+        alert(i.firstName + " " + i.lastName);
     }
 }
 
@@ -166,8 +126,8 @@ function searchForPerson(people) {
     }
     var knowAge = promptFor("Do you know the person's age?", yesNo);
     if (knowAge == "yes") {
-        var personage = promptFor("What is the person's age?", chars);
-        var peopleList = searchByAge(people, personage);
+        var age = promptFor("What is the person's age?", chars);
+        var peopleList = searchByAge(people, age);
         if (peopleList.length == 1) {
             var foundPerson = peopleList[0];
             return mainMenu(foundPerson);
@@ -227,7 +187,6 @@ function searchByAge(people, personage) {
     });
 }
 
-
 function searchByEyeColor(people, color) {
     var eyeColorArray = [];
     return people.filter(function (person) {
@@ -241,6 +200,7 @@ function searchByEyeColor(people, color) {
 }
 
 function searchByWeight(people, weight) {
+    var weight = promptFor("What is the person's weight?")
     var weightArray = [];
     return people.filter(function (person) {
         if (person.weight == weight) {
