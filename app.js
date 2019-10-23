@@ -31,16 +31,14 @@ function mainMenu(foundPerson, people) {
         return app(people);
     }
 
-    var displayOption = prompt("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants' ? Type the option you want or 'restart' or 'quit'");
+    var displayOption = promptFor("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants' ? Type the option you want or 'restart' or 'quit'", chars).toLowerCase();
 
     switch (displayOption) {
         case "info":
             displayPerson(person, people);
             break;
         case "family":
-            findSpouse(person, people);
-            findSiblings(person, people);
-            findParents(person, people);
+            displayFamily(person, people);
             break;
         case "descendants":
             getDescendants(person, people);
@@ -191,43 +189,46 @@ function getAge(person) {
 
 function findSiblings(foundPerson, people) {
     var foundSiblings = people.filter(function (person) {
-        if (foundPerson.parents.length === 0) {
-            return false;
-        }
         if (foundPerson.parents[0 || 1] === person.parents[0 || 1] && foundPerson.id !== person.id) {
             return true;
         } else {
             return false;
         }
     });
+    for (var i = 0; i < foundSiblings.length; i++) {
+        alert("Siblings: " + i.firstName + " " + i.lastName);
+    }
     if (foundSiblings.length === 0) {
         alert("No sibling listed in the system");
+        return displayFamily(foundPerson, foundSiblings);
     }
-    for (var i = 0; i < foundSiblings.length; i++) {
-        alert("Siblings: " + person.firstName + " " + person.lastName);
-    }
-    return mainMenu(foundPerson, people);
+    return displayFamily(foundPerson, foundSiblings);
 }
 
 function findParents(foundPerson, people) {
-    var parents = people.filter(function (person) {
-        if (foundPerson.parents[0 || 1] === person.id) {
+    var foundParents = people.filter(function (person) {
+        if (foundPerson.parents[0 || 1] === person.id[0]) {
+            foundParents.push(person);
             return true;
         } else {
             return false;
         }
     });
-    if (parents.length == 0) {
+    if (foundParents.length == 0) {
         alert("No parents listed in system");
+        return displayFamily(foundPerson, foundParents);
+
     }
-    for (var i = 0; i < parents.length; i++) {
-        alert("Parent(s):" + " " + person.firstName + " " + person.lastName);
+    for (var i = 0; i < foundParents.length; i++) {
+        alert("Parent(s):" + " " + i.firstName + " " + i.lastName);
     }
-    return mainMenu(foundPerson, people);
+    return displayFamily(foundPerson, foundParents);
 }
+
 
 function findSpouse(foundPerson, people) {
     var spouseId = foundPerson.currentSpouse;
+    var person = foundPerson;
     var partner = people.filter(function (person) {
         if (spouseId === person.id) {
             return true;
@@ -237,15 +238,15 @@ function findSpouse(foundPerson, people) {
     });
     if (partner.length === 0) {
         alert("No spouse in system");
+        return displayFamily(person, people);
     }
     for (var i = 0; i < partner.length; i++) {
-        alert("Spouse is" + " " + person.firstName + " " + person.lastName);
+        alert("Spouse:" + " " + i.firstName + " " + i.lastName);
     }
-    return mainMenu(foundPerson, people);
+    return displayFamily(person, partner);
 }
 
 function getDescendants(person, people, descendants = []) {
-    var foundPerson;
     var descendants = people.filter(function (el) {
         if (person.id === el.parents[0] || person.id === el.parents[1]) {
             alert("Descendant: " + el.firstName + " " + el.lastName);
@@ -261,20 +262,27 @@ function getDescendants(person, people, descendants = []) {
             return getDescendants(el, people, descendants);
         });
     }
-    return app();
+    return descendants;
 }
 
-/*function displayDescendants(descendants) {
-    if (descendants.length == 0) {
-        return;
-    } else {
-        descendants.forEach(function (el) {
-            alert("Descendant: " + el.firstName + " " + el.lastName);
-        });
+function displayFamily(person, people) {
+    var whichFamily = promptFor("Would you like to see 'spouse', 'siblings', 'parents', or 'menu'?", chars).toLowerCase();
+    switch (whichFamily) {
+        case "spouse":
+            findSpouse(person, people);
+            return;
+        case "siblings":
+            findSiblings(person, people);
+            return;
+        case "parents":
+            findParents(person, people);
+            return;
+        case "menu":
+            return mainMenu(person, people);
+        default:
+            return displayFamily(person, people);
     }
-    return;
 }
-*/
 
 function displayPeople(people) {
     alert(people.map(function (person) {
@@ -363,46 +371,3 @@ function searchByTrait(people) {
         return searchByTrait(people);
     }
 }
-
-
-/*
-function genderList() {
-    var gender = promptFor("Which gender would you like to filter by?").toLowerCase();
-    var genderArray = searchByGender(gender);
-    for (var i = 0; i < genderArray.length; i++) {
-        alert(i.firstName + " " + i.lastName);
-    }
-}
-
-function ageList() {
-    var age = promptFor("Which age would you like to filter by?").toLowerCase();
-    var ageArray = searchByAge(age);
-    for (var i = 0; i < ageArray.length; i++); {
-        alert(i.firstName + " " + i.lastName);
-    }
-}
-
-  function eyeColorList() {
-    var eyeColor = promptFor("What eye color would you like to filter by?").toLowerCase();
-    var eyeColorArray = searchByEyeColor(eyeColor);
-    for (var i = 0; i < eyeColorArray.length; i++); {
-        alert(i.firstName + " " + i.lastName);
-    }
-}
-
-function weightList() {
-    var weight = promptFor("What weight would you like to filter by?").toLowerCase();
-    var weightArray = searchByWeight(weight);
-    for (var i = 0; i < weightArray.length; i++); {
-        alert(i.firstName + " " + i.lastName);
-    }
-}
-
-function occupationList() {
-    var occupation = promptFor("What occupation would you like to filter by?").toLowerCase();
-    var occupationArray = searchByOccupation(app, occupation);
-    for (var i = 0; i < occupationArray.length; i++); {
-        alert(i.firstName + " " + i.lastName);
-    }
-}
-*/
