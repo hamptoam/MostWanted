@@ -2,23 +2,25 @@
 
 function app(people) {
 
-    var searchType = promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo).toLowerCase();
-    if (searchType != "yes" || "no") {
-        alert("Please type in Yes or No");
-        return searchType;
+    var personOrPeople = promptFor("Would you like to view lists of people by traits?", yesNo);
+    if (personOrPeople === "yes") {
+        getLists(people);
     }
-    switch (searchType) {
-        case 'yes':
-            var foundPerson = searchByName(people);
-            mainMenu(foundPerson, people);
-            break;
-        case 'no':
-            var foundPerson = searchByTraits(people);
-            mainMenu(foundPerson, people);
-            break;
-        default:
-            app(people); // restart app
-            break;
+    if (personOrPeople === "no") {
+        var searchType = promptFor("Do you know the name of the person you are looking for? Enter yes or no", yesNo);
+        switch (searchType) {
+            case 'yes':
+                var foundPerson = searchByName(people);
+                mainMenu(foundPerson, people);
+                break;
+            case 'no':
+                var foundPerson = searchByTraits(people);
+                mainMenu(foundPerson, people);
+                break;
+            default:
+                app(people); // restart app
+                break;
+        }
     }
 }
 
@@ -29,32 +31,25 @@ function mainMenu(foundPerson, people) {
         return app(people);
     }
 
-    var displayOption = prompt("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'siblings', 'spouse' , 'children' or 'grandchildren' ? Type the option you want or 'restart' or 'quit'");
+    var displayOption = prompt("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants' ? Type the option you want or 'restart' or 'quit'");
 
     switch (displayOption) {
         case "info":
             displayPerson(person, people);
             break;
-        case "spouse":
+        case "family":
             findSpouse(person, people);
-            break;
-        case "siblings":
             findSiblings(person, people);
+            findParents(person, people);
             break;
-        case "children":
-            findChildren(person, people);
-            break;
-        case "grandchildren":
+        case "descendants":
             getDescendants(person, people);
             break;
         case "restart":
             app(people); // restart
             break;
-
         case "quit":
-            return;
         default:
-
             return mainMenu(person, people);
     }
 }
@@ -73,46 +68,6 @@ function searchByName(people) {
     return foundPerson[0];
 }
 
-function genderList() {
-    var gender = promptFor("Which gender would you like to filter by?").toLowerCase();
-    var genderArray = searchByGender(gender);
-    for (var i = 0; i < genderArray.length; i++) {
-        alert(i.firstName + " " + i.lastName);
-    }
-}
-
-function ageList() {
-    var age = promptFor("Which age would you like to filter by?").toLowerCase();
-    var ageArray = searchByAge(age);
-    for (var i = 0; i < ageArray.length; i++); {
-        alert(i.firstName + " " + i.lastName);
-    }
-}
-
-function eyeColorList() {
-    var eyeColor = promptFor("What eye color would you like to filter by?").toLowerCase();
-    var eyeColorArray = searchByEyeColor(eyeColor);
-    for (var i = 0; i < eyeColorArray.length; i++); {
-        alert(i.firstName + " " + i.lastName);
-    }
-}
-
-function weightList() {
-    var weight = promptFor("What weight would you like to filter by?").toLowerCase();
-    var weightArray = searchByWeight(weight);
-    for (var i = 0; i < weightArray.length; i++); {
-        alert(i.firstName + " " + i.lastName);
-    }
-}
-
-function occupationList() {
-    var occupation = promptFor("What occupation would you like to filter by?").toLowerCase();
-    var occupationArray = searchByOccupation(occupation);
-    for (var i = 0; i < occupationArray.length; i++); {
-        alert(i.firstName + " " + i.lastName);
-    }
-}
-
 function searchForPerson(people) {
 
     var knowGender = promptFor("Do you know the person's gender? yes or no", yesNo);
@@ -126,8 +81,8 @@ function searchForPerson(people) {
     }
     var knowAge = promptFor("Do you know the person's age?", yesNo);
     if (knowAge == "yes") {
-        var age = promptFor("What is the person's age?", chars);
-        var peopleList = searchByAge(people, age);
+        var personage = promptFor("What is the person's age?", chars);
+        var peopleList = searchByAge(people, personage);
         if (peopleList.length == 1) {
             var foundPerson = peopleList[0];
             return mainMenu(foundPerson);
@@ -200,7 +155,6 @@ function searchByEyeColor(people, color) {
 }
 
 function searchByWeight(people, weight) {
-    var weight = promptFor("What is the person's weight?")
     var weightArray = [];
     return people.filter(function (person) {
         if (person.weight == weight) {
@@ -236,71 +190,93 @@ function getAge(person) {
 }
 
 function findSiblings(foundPerson, people) {
-    var findSiblings = [];
-    var person = foundPerson;
-
-    for (var person = 0; person < people.length; person++) {
-        findSiblings = people.filter(function (siblingPerson) {
-            if (person.parents[0 || 1] === siblingPerson.parents[0 || 1]) {
-                alert("Sibling : " + siblingPerson.firstName + " " + siblingPerson.lastName);
-                findSiblings.push(siblingPerson);
-            }
-        });
-        return findSiblings;
+    var foundSiblings = people.filter(function (person) {
+        if (foundPerson.parents.length === 0) {
+            return false;
+        }
+        if (foundPerson.parents[0 || 1] === person.parents[0 || 1] && foundPerson.id !== person.id) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+    if (foundSiblings.length === 0) {
+        alert("No sibling listed in the system");
     }
-    mainMenu(foundPerson, people);
+    for (var i = 0; i < foundSiblings.length; i++) {
+        alert("Siblings: " + person.firstName + " " + person.lastName);
+    }
+    return mainMenu(foundPerson, people);
+}
+
+function findParents(foundPerson, people) {
+    var parents = people.filter(function (person) {
+        if (foundPerson.parents[0 || 1] === person.id) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+    if (parents.length == 0) {
+        alert("No parents listed in system");
+    }
+    for (var i = 0; i < parents.length; i++) {
+        alert("Parent(s):" + " " + person.firstName + " " + person.lastName);
+    }
+    return mainMenu(foundPerson, people);
 }
 
 function findSpouse(foundPerson, people) {
     var spouseId = foundPerson.currentSpouse;
     var partner = people.filter(function (person) {
-        for (var person = 0; person < people.length; person++) {
-            if (person.id === spouseId) {
-                alert("Spouse is " + " " + person.firstName + " " + person.lastName);
-                return mainMenu(foundPerson, people);
-            } else {
-                return false;
-            }
+        if (spouseId === person.id) {
+            return true;
+        } else {
+            return false;
         }
     });
+    if (partner.length === 0) {
+        alert("No spouse in system");
+    }
+    for(var i = 0; i < partner.length; i++) {
+        alert("Spouse is" + " " + person.firstName + " " + person.lastName);
+    }
+    return mainMenu(foundPerson, people);
 }
 
 function findChildren(foundPerson, people) {
-    var foundChildren = [];
     var parent = foundPerson;
-    for (var person = 0; person < people.length; person++) {
-        foundChildren = people.filter(function (childPerson) {
-            if (parent.id === childPerson.parents[person]) {
-                alert(childPerson.firstName + " " + childPerson.lastName);
-                foundChildren.push(childPerson);
-            }
-        });
-        if (foundChildren == null) {
-            alert(parent.firstName + " " + "has no descendants");
-            return mainMenu(foundPerson, people);
+    var foundChildren = people.filter(function (childPerson) {
+        if (parent.id === childPerson.parents[i]) {
+            alert(childPerson.firstName + " " + childPerson.lastName);
+            foundChildren.push(childPerson);
         }
-        mainMenu(foundPerson, people);
-        return foundChildren[person];
+    });
+    if (foundChildren.length === 0) {
+        alert(parent.firstName + " " + "has no descendants");
+        return mainMenu(foundPerson, people);
     }
+    mainMenu(foundPerson, people);
+    return foundChildren[i];
 }
 
 function getDescendants(foundPerson, people) {
     var descendants = [];
     var parent = foundPerson;
     descendants = people.filter(function (descPerson) {
-        for (var person = 0; person < people.length; person++) {
-            if (parent.id === descPerson.parents[person]) {
+        for (var i = 0; i < people.length; i++) {
+            if (parent.id === descPerson.parents[i]) {
                 descendants.push(descPerson);
                 return getDescendants(descPerson, people);
             } else {
                 return false;
             }
         }
-        for (var person = 0; person < descendants.length; person++) {
+        for (var i = 0; i < descendants.length; i++) {
             alert(person.firstName + " " + person.lastName);
         }
         mainMenu(foundPerson, people);
-        return descendants[person];
+        return descendants[i];
     });
 }
 
@@ -337,3 +313,100 @@ function yesNo(input) {
 function chars(input) {
     return true;
 }
+
+function searchByTrait(people) {
+    var singleTrait = promptFor("Which trait would you like to filter by?").toLowerCase();
+    if (singleTrait === "gender") {
+        var gender = promptFor("What gender?").toLowerCase();
+        searchByGender(people, gender);
+        var genderArray = searchByGender.genderArray;
+
+        var trait = gender;
+        var array = genderArray;
+        return array, trait;
+
+    }
+    if (singleTrait === "eyecolor" || "eye color") {
+        var eyeColor = promptFor("What eyecolor?").toLowerCase();
+        searchByEyeColor(people, eyeColor);
+        var eyeColorArray = searchByEyeColor.eyeColorArray;
+
+        var trait = eyeColor;
+        var array = eyeColorArray;
+        return array, trait;
+    }
+    if (singleTrait === "age") {
+        var personage = promptFor("What age?");
+        searchByAge(people, personage);
+        var ageArray = searchByAge.ageArray;
+
+        var trait = personage;
+        var array = ageArray;
+        return array, trait;
+    }
+    if (singleTrait === "weight") {
+        var weight = promptFor("What weight?");
+        searchByWeight(people, weight);
+        var weightArray = searchByWeight.weightArray;
+
+        var trait = weight;
+        var array = weightArray;
+        return array, trait;
+
+    }
+    if (singleTrait === "occupation") {
+        var occupation = promptFor("What occupation?");
+        searchByOccupation(people, occupation);
+        var occupationArray = searchByWeight.occupationArray;
+
+        var trait = occupation;
+        var array = occupationArray;
+        return array, trait;
+    }
+    if (singleTrait !== "gender" || "eyecolor" || "eye color" || "age" || "weight" || "occupation") {
+        return searchByTrait(people);
+    }
+}
+
+
+/*
+function genderList() {
+    var gender = promptFor("Which gender would you like to filter by?").toLowerCase();
+    var genderArray = searchByGender(gender);
+    for (var i = 0; i < genderArray.length; i++) {
+        alert(i.firstName + " " + i.lastName);
+    }
+}
+
+function ageList() {
+    var age = promptFor("Which age would you like to filter by?").toLowerCase();
+    var ageArray = searchByAge(age);
+    for (var i = 0; i < ageArray.length; i++); {
+        alert(i.firstName + " " + i.lastName);
+    }
+}
+
+  function eyeColorList() {
+    var eyeColor = promptFor("What eye color would you like to filter by?").toLowerCase();
+    var eyeColorArray = searchByEyeColor(eyeColor);
+    for (var i = 0; i < eyeColorArray.length; i++); {
+        alert(i.firstName + " " + i.lastName);
+    }
+}
+
+function weightList() {
+    var weight = promptFor("What weight would you like to filter by?").toLowerCase();
+    var weightArray = searchByWeight(weight);
+    for (var i = 0; i < weightArray.length; i++); {
+        alert(i.firstName + " " + i.lastName);
+    }
+}
+
+function occupationList() {
+    var occupation = promptFor("What occupation would you like to filter by?").toLowerCase();
+    var occupationArray = searchByOccupation(app, occupation);
+    for (var i = 0; i < occupationArray.length; i++); {
+        alert(i.firstName + " " + i.lastName);
+    }
+}
+*/
