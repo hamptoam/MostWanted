@@ -238,47 +238,43 @@ function findSpouse(foundPerson, people) {
     if (partner.length === 0) {
         alert("No spouse in system");
     }
-    for(var i = 0; i < partner.length; i++) {
+    for (var i = 0; i < partner.length; i++) {
         alert("Spouse is" + " " + person.firstName + " " + person.lastName);
     }
     return mainMenu(foundPerson, people);
 }
 
-function findChildren(foundPerson, people) {
-    var parent = foundPerson;
-    var foundChildren = people.filter(function (childPerson) {
-        if (parent.id === childPerson.parents[i]) {
-            alert(childPerson.firstName + " " + childPerson.lastName);
-            foundChildren.push(childPerson);
+function getDescendants(person, people, descendants = []) {
+    var foundPerson;
+    var descendants = people.filter(function (el) {
+        if (person.id === el.parents[0] || person.id === el.parents[1]) {
+            alert("Descendant: " + el.firstName + " " + el.lastName);
+            return true;
+        } else {
+            return false;
         }
     });
-    if (foundChildren.length === 0) {
-        alert(parent.firstName + " " + "has no descendants");
-        return mainMenu(foundPerson, people);
+    if (descendants.length === 0) {
+        return false;
+    } else {
+        descendants.forEach(function (el) {
+            return getDescendants(el, people, descendants);
+        });
     }
-    mainMenu(foundPerson, people);
-    return foundChildren[i];
+    return app();
 }
 
-function getDescendants(foundPerson, people) {
-    var descendants = [];
-    var parent = foundPerson;
-    descendants = people.filter(function (descPerson) {
-        for (var i = 0; i < people.length; i++) {
-            if (parent.id === descPerson.parents[i]) {
-                descendants.push(descPerson);
-                return getDescendants(descPerson, people);
-            } else {
-                return false;
-            }
-        }
-        for (var i = 0; i < descendants.length; i++) {
-            alert(person.firstName + " " + person.lastName);
-        }
-        mainMenu(foundPerson, people);
-        return descendants[i];
-    });
+/*function displayDescendants(descendants) {
+    if (descendants.length == 0) {
+        return;
+    } else {
+        descendants.forEach(function (el) {
+            alert("Descendant: " + el.firstName + " " + el.lastName);
+        });
+    }
+    return;
 }
+*/
 
 function displayPeople(people) {
     alert(people.map(function (person) {
