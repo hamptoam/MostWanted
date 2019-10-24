@@ -187,67 +187,62 @@ function getAge(person) {
     return age;
 }
 
-function findSiblings(foundPerson, people) {
-    var foundSiblings = people.filter(function (person) {
-        if (foundPerson.parents[0 || 1] === person.parents[0 || 1] && foundPerson.id !== person.id) {
+function findSiblings(foundPerson, people, foundSiblings = []) {
+    var foundSiblings = people.filter(function (sibling) {
+        if (foundPerson.parents[0 || 1] === sibling.parents[0 || 1] && foundPerson.id !== sibling.currentSpouse && foundPerson.id !== sibling.id) {
             return true;
         } else {
             return false;
         }
     });
-    for (var i = 0; i < foundSiblings.length; i++) {
-        alert("Siblings: " + i.firstName + " " + i.lastName);
-    }
     if (foundSiblings.length === 0) {
         alert("No sibling listed in the system");
-        return displayFamily(foundPerson, foundSiblings);
+        return displayFamily(foundPerson, people);
     }
-    return displayFamily(foundPerson, foundSiblings);
+    var siblings = foundSiblings.forEach(function (sibling) {
+        alert("Sibling: " + sibling.firstName + " " + sibling.lastName);
+    });
+    return displayFamily(foundPerson, people);
 }
 
-function findParents(foundPerson, people) {
-    var foundParents = people.filter(function (person) {
-        if (foundPerson.parents[0 || 1] === person.id[0]) {
-            foundParents.push(person);
+function findParents(foundPerson, people, foundParents = []) {
+    foundParents = people.filter(function (parent) {
+        if (foundPerson.parents[0] === parent.id || foundPerson.parents[1] === parent.id) {
             return true;
         } else {
             return false;
         }
     });
-    if (foundParents.length == 0) {
+    if (foundParents.length === 0) {
         alert("No parents listed in system");
-        return displayFamily(foundPerson, foundParents);
-
+        return displayFamily(foundPerson, people);
     }
-    for (var i = 0; i < foundParents.length; i++) {
-        alert("Parent(s):" + " " + i.firstName + " " + i.lastName);
-    }
-    return displayFamily(foundPerson, foundParents);
+    foundParents.forEach(function (parent) {
+        alert("Parent: " + parent.firstName + " " + parent.lastName);
+    });
+    return displayFamily(foundPerson, people);
 }
 
-
-function findSpouse(foundPerson, people) {
-    var spouseId = foundPerson.currentSpouse;
-    var person = foundPerson;
-    var partner = people.filter(function (person) {
-        if (spouseId === person.id) {
+function findSpouse(foundPerson, people, foundSpouse = []) {
+    foundSpouse = people.filter(function (person) {
+        if (foundPerson.id === person.currentSpouse) {
             return true;
         } else {
             return false;
         }
     });
-    if (partner.length === 0) {
+    if (foundSpouse.length === 0) {
         alert("No spouse in system");
-        return displayFamily(person, people);
+        return displayFamily(foundPerson, people)
     }
-    for (var i = 0; i < partner.length; i++) {
-        alert("Spouse:" + " " + i.firstName + " " + i.lastName);
-    }
-    return displayFamily(person, partner);
+    foundSpouse.forEach(function (spouse) {
+        alert("Spouse: " + spouse.firstName + " " + spouse.lastName);
+    });
+    return displayFamily(foundPerson, people);
 }
 
 function getDescendants(person, people, descendants = []) {
-    var descendants = people.filter(function (el) {
+    descendants = people.filter(function (el) {
         if (person.id === el.parents[0] || person.id === el.parents[1]) {
             alert("Descendant: " + el.firstName + " " + el.lastName);
             return true;
@@ -256,13 +251,13 @@ function getDescendants(person, people, descendants = []) {
         }
     });
     if (descendants.length === 0) {
-        return false;
+        return descendants;
     } else {
         descendants.forEach(function (el) {
             return getDescendants(el, people, descendants);
         });
     }
-    return descendants;
+    return displayFamily(person, descendants);
 }
 
 function displayFamily(person, people) {
@@ -280,7 +275,7 @@ function displayFamily(person, people) {
         case "menu":
             return mainMenu(person, people);
         default:
-            return displayFamily(person, people);
+            return app(person, people);
     }
 }
 
