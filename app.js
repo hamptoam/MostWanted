@@ -9,7 +9,7 @@ function app(people) {
             mainMenu(foundPerson, people);
             break;
         case 'no':
-            var foundPerson = oneOrMulti(people);
+            var foundPerson = filterByTraits(people);
             mainMenu(foundPerson, people);
             break;
         default:
@@ -60,175 +60,96 @@ function searchByName(people) {
     return foundPerson[0];
 }
 
-function oneOrMulti(people) {
-
-    var filterList = [];
-
-    var personOrPeople = promptFor("Would you like to search for 'one' person, or 'multi'?").toLowerCase();
-    switch (personOrPeople) {
-        case "one":
-            searchForPerson(people);
-            break;
-        case "multi":
-            filterByTraits(people);
-            break;
-    }
-}
-
-function filterByTraits(people) {
-
-    var filterArray = [];
-    var sortedArray = removeUniqueVariables.sortedArray;
-
-    alert("You can choose from 2 to up to 5 traits to filter the lists by");
+function filterByTraits(people, filterArray = [], finalList = []) {
+    alert("You can choose from 1 to up to 5 traits to filter the database by to find one or more people");
     var traitGender = promptFor("Would you like to search by gender?", yesNo);
-    var traitAge = promptFor("Would you like to search by age?", yesNo);
-    var traitEyeColor = promptFor("Would you like to search by eyecolor?", yesNo);
-    var traitWeight = promptFor("Would you like to search by weight?", yesNo);
-    var traitOccupation = promptFor("Would you like to search by occupation?", yesNo);
-
     if (traitGender === "yes") {
-        var gender = promptFor("What is their gender?", chars).toLowerCase();
+        var gender = promptFor("What gender?", chars).toLowerCase();
         var genderList = searchByGender(people, gender);
         filterArray.push(genderList);
+        if (traitAge === "no" && traitEyeColor === "no" && traitWeight === "no" && traitOccupation === "no") {
+            genderList.forEach(function (person) {
+                alert("Result: " + person.firstName + " " + person.lastName);
+            });
+            return app(people);
+        }
     }
+    var traitAge = promptFor("Would you like to search by age?", yesNo);
     if (traitAge === "yes") {
-        var personage = promptFor("What is the person's age?", chars);
-        var ageList = searchByAge(people, personage);
+        var age = promptFor("What age?");
+        var ageList = searchByAge(people, age);
         filterArray.push(ageList);
+        if (traitGender === "no" && traitEyeColor === "no" && traitWeight === "no" && traitOccupation === "no") {
+            ageList.forEach(function (person) {
+                alert("Result: " + person.firstName + " " + person.lastName);
+            });
+            return app(people);
+        }
     }
+    var traitEyeColor = promptFor("Would you like to search by eyecolor?", yesNo);
     if (traitEyeColor === "yes") {
-        var personEyeColor = promptFor("What is the person's eyecolor?");
-        var eyeColorList = searchByEyeColor(people, personEyeColor);
+        var eyeColor = promptFor("What eyecolor?", chars).toLowerCase();
+        var eyeColorList = searchByEyeColor(people, eyeColor);
         filterArray.push(eyeColorList);
+        if (traitGender === "no" && traitAge === "no" && traitWeight === "no" && traitOccupation === "no") {
+            eyeColorList.forEach(function (person) {
+                alert("Result: " + person.firstName + " " + person.lastName);
+            });
+            return app(people);
+        }
     }
+    var traitWeight = promptFor("Would you like to search by weight?", yesNo);
     if (traitWeight === "yes") {
-        var weight = promptFor("What is the person's weight?", chars).toLowerCase();
+        var weight = promptFor("What weight?").parseInt();
         var weightList = searchByWeight(people, weight);
         filterArray.push(weightList);
+        if (traitGender === "no" && traitAge === "no" && traitEyeColor === "no" && traitOccupation === "no") {
+            weightList.forEach(function (person) {
+                alert("Result: " + person.firstName + " " + person.lastName);
+            });
+            return app(people);
+        }
     }
+    var traitOccupation = promptFor("Would you like to search by occupation?", yesNo);
     if (traitOccupation === "yes") {
-        var occupation = promptFor("What is the person's occupation?", chars);
+        var occupation = promptFor("What occupation?", chars).toLowerCase();
         var occupationList = searchByOccupation(people, occupation);
         filterArray.push(occupationList);
+        if (traitGender === "no" && traitAge === "no" && traitEyeColor === "no" && traitWeight === "no") {
+            occupationList.forEach(function (person) {
+                alert("Result: " + person.firstName + " " + person.lastName);
+            });
+            return app(people);
+        }
     }
-    for(var i = 0; i < sortedArray.length; i++)
+     finalList = filterArray.filter(function (arrayperson) {
+        if (person.id === id) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+    if(finalList.length > 1)
     {
-        alert("Results: " + i.firstName + " " + i.lastName);
+        finalList.forEach(function (person) {
+            alert("Result: " + person.firstName + " " + person.lastName);
+        });
     }
-    return app();
-}
-
-function removeUniqueVariables() {
-    var reduceList = filterByTraits.filterArray;
-    var sortedList = reduceList.slice().sort();
-
-    var sortedArray = [];
-    for (var i = 0; i < sortedList.length - 1; i++) {
-        if (sortedList[i + 1] == sortedList[i]) {
-            sortedArray.push(sortedList[i]);
-        }
+    if (finalList.length == 1) {
+        var foundPerson = finalList[0];
+        return mainMenu(foundPerson);
     }
-    console.log(sortedArray);
-    return sortedArray;
-}
-
-function searchForPerson(people) {
-
-    var knowGender = promptFor("Do you know the person's gender? yes or no", yesNo);
-    if (knowGender == "yes") {
-        var gender = promptFor("What is their gender?", chars).toLowerCase();
-        var genderList = searchByGender(people, gender);
-        if (genderList.length == 1) {
-            var foundPerson = genderList[0];
-            return mainMenu(foundPerson);
-        }
-        var genderlist = promptFor("Would you like to see a list of people by this gender?", yesNo);
-        if (genderlist === "yes") {
-            for (var i = 0; i < genderList.length; i++) {
-                alert(i.firstName + " " + i.lastName);
-            }
-        } else {
-            return genderList;
-        }
+    if(finalList.length == 0)
+    {
+        alert("No people found based on those specifications");
+        return app();
     }
-    var knowAge = promptFor("Do you know the person's age?", yesNo);
-    if (knowAge === "yes") {
-        var personage = promptFor("What is the person's age?", chars);
-        var ageList = searchByAge(people, personage);
-        if (ageList.length == 1) {
-            var foundPerson = ageList[0];
-            return mainMenu(foundPerson);
-        }
-        var agelist = promptFor("Would you like to see a list of people by this age?", yesNo);
-        if (agelist === "yes") {
-            for (var i = 0; i < ageList.length; i++) {
-                alert(i.firstName + " " + i.lastName);
-            }
-        } else {
-            return ageList;
-        }
-    }
-    var knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", yesNo);
-    if (knowEyeColor == "yes") {
-        var color = promptFor("What is the person's eyecolor?", chars).toLowerCase();
-        var eyecolorList = searchByEyeColor(people, color);
-        if (eyecolorList.length == 1) {
-            var foundPerson = eyecolorList[0];
-            return mainMenu(foundPerson);
-        }
-        var eyecolorlist = promptFor("Would you like to see a list of people by this eyecolor?", yesNo);
-        if (eyecolorlist === "yes") {
-            for (var i = 0; i < ageList.length; i++) {
-                alert(i.firstName + " " + i.lastName);
-            }
-        } else {
-            return eyecolorList;
-        }
-    }
-    var knowWeight = promptFor("Do you know the person's weight? yes or no", yesNo);
-    if (knowWeight == "yes") {
-        var weight = promptFor("What is the person's weight?", chars).toLowerCase();
-        var weightList = searchByWeight(people, weight);
-        if (weightList.length == 1) {
-            var foundPerson = weightList[0];
-            return mainMenu(foundPerson);
-        }
-
-        var weightlist = promptFor("Would you like to see a list of people by this weight?", yesNo);
-        if (weightlist === "yes") {
-            for (var i = 0; i < weightList.length; i++) {
-                alert(i.firstName + " " + i.lastName);
-            }
-        } else {
-            return weightList;
-        }
-    }
-    var knowOccupation = promptFor("Do you know the person's occupation? yes or no", yesNo);
-    if (knowOccupation == "yes") {
-        var occupation = promptFor("What is the person's occupation?", chars);
-        var occupationList = searchByOccupation(people, occupation);
-        if (occupationList.length == 1) {
-            var foundPerson = peopleList[0];
-            return mainMenu(foundPerson);
-        }
-
-        var occupationlist = promptFor("Would you like to see a list of people by this occupation?", yesNo);
-        if (occupationlist === "yes") {
-            for (var i = 0; i < occupationList.length; i++) {
-                alert(i.firstName + " " + i.lastName);
-            }
-        } else {
-            return occupationList;
-        }
-    }
+    return finalList;
 }
 
 function searchByGender(people, gender) {
-    var genderArray = [];
     return people.filter(function (person) {
-        if (person.gender == gender) {
-            genderArray.push(person);
+        if (person.gender === gender) {
             return true;
         } else {
             return false;
@@ -237,11 +158,9 @@ function searchByGender(people, gender) {
 }
 
 function searchByAge(people, personage) {
-    var ageArray = [];
     return people.filter(function (person) {
         var age = getAge(person);
-        if (personage == age) {
-            ageArray.push(person);
+        if (personage === age) {
             return true;
         } else {
             return false;
@@ -250,10 +169,8 @@ function searchByAge(people, personage) {
 }
 
 function searchByEyeColor(people, color) {
-    var eyeColorArray = [];
     return people.filter(function (person) {
-        if (person.eyeColor == color) {
-            eyeColorArray.push(person);
+        if (person.eyeColor === color) {
             return true;
         } else {
             return false;
@@ -262,10 +179,8 @@ function searchByEyeColor(people, color) {
 }
 
 function searchByWeight(people, weight) {
-    var weightArray = [];
     return people.filter(function (person) {
-        if (person.weight == weight) {
-            weightArray.push(person);
+        if (person.weight === weight) {
             return true;
         } else {
             return false;
@@ -274,10 +189,8 @@ function searchByWeight(people, weight) {
 }
 
 function searchByOccupation(people, occupation) {
-    var occupationArray = [];
     return people.filter(function (person) {
-        if (person.occupation == occupation) {
-            occupationArray.push(person);
+        if (person.occupation === occupation) {
             return true;
         } else {
             return false;
@@ -297,7 +210,7 @@ function getAge(person) {
 }
 
 function findSiblings(foundPerson, people, foundSiblings = []) {
-    var foundSiblings = people.filter(function (sibling) {
+    foundSiblings = people.filter(function (sibling) {
         if (foundPerson.parents[0 || 1] === sibling.parents[0 || 1] && foundPerson.id !== sibling.currentSpouse && foundPerson.id !== sibling.id) {
             return true;
         } else {
@@ -410,7 +323,8 @@ function displayPerson(person) {
 function promptFor(question, valid) {
     do {
         var response = prompt(question).trim();
-    } while (!response || !valid(response));
+    }
+    while (!response || !valid(response));
     return response;
 }
 
