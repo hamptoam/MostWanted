@@ -2,25 +2,19 @@
 
 function app(people) {
 
-    var personOrPeople = promptFor("Would you like to view lists of people by traits?", yesNo);
-    if (personOrPeople === "yes") {
-        getLists(people);
-    }
-    if (personOrPeople === "no") {
-        var searchType = promptFor("Do you know the name of the person you are looking for? Enter yes or no", yesNo);
-        switch (searchType) {
-            case 'yes':
-                var foundPerson = searchByName(people);
-                mainMenu(foundPerson, people);
-                break;
-            case 'no':
-                var foundPerson = searchByTraits(people);
-                mainMenu(foundPerson, people);
-                break;
-            default:
-                app(people); // restart app
-                break;
-        }
+    var searchType = promptFor("Do you know the name of the person you are looking for? Enter yes or no", yesNo);
+    switch (searchType) {
+        case 'yes':
+            var foundPerson = searchByName(people);
+            mainMenu(foundPerson, people);
+            break;
+        case 'no':
+            var foundPerson = searchByTraits(people);
+            mainMenu(foundPerson, people);
+            break;
+        default:
+            app(people); // restart app
+            break;
     }
 }
 
@@ -66,51 +60,132 @@ function searchByName(people) {
     return foundPerson[0];
 }
 
+function searchByTraits(people) {
+
+    var personOrPeople = promptFor("Would you like to search for 'one' person, or 'multi'?").toLowerCase();
+    switch(personOrPeople) {
+        case "one": 
+        searchForPerson(people);
+        break;
+        case "multi": 
+        alert("You can choose from 2 to up to 5 traits to filter the lists by");
+        var traitGender = promptFor("Would you like to search by gender?", yesNo);  
+        var traitAge = promptFor("Would you like to search by age?", yesNo);
+        var traitEyeColor = promptFor("Would you like to search by eyecolor?", yesNo);
+        var traitWeight = promptFor("Would you like to search by weight?", yesNo);
+        var traitOccupation = promptFor("Would you like to search by occupation?", yesNo);
+
+        if(traitGender === "yes") {
+        var gender = promptFor("What is their gender?", chars).toLowerCase();
+        var genderList = searchByGender(people, gender);  
+        } 
+        if(traitAge === "yes") {
+        var personage = promptFor("What is the person's age?", chars);
+        var ageList = searchByAge(people, personage);
+        }
+        if(traitEyeColor === "yes") {
+        var personEyeColor = promptFor("What is the person's eyecolor?");
+        var eyeColorList = searchByEyeColor(people, personEyeColor);
+        }
+        if(traitWeight === "yes") {
+            var weight = promptFor("What is the person's weight?", chars).toLowerCase();
+            var weightList = searchByWeight(people, weight);
+        }
+        if(traitOccupation === "yes") {
+            var occupation = promptFor("What is the person's occupation?", chars);
+            var occupationList = searchByOccupation(people, occupation);
+        }
+    }
+}
+
+
 function searchForPerson(people) {
 
     var knowGender = promptFor("Do you know the person's gender? yes or no", yesNo);
     if (knowGender == "yes") {
         var gender = promptFor("What is their gender?", chars).toLowerCase();
-        var peopleList = searchByGender(people, gender);
-        if (peopleList.length == 1) {
-            var foundPerson = peopleList[0];
+        var genderList = searchByGender(people, gender);
+        if (genderList.length == 1) {
+            var foundPerson = genderList[0];
             return mainMenu(foundPerson);
+        }
+        var genderlist = promptFor("Would you like to see a list of people by this gender?", yesNo);
+        if (genderlist === "yes") {
+            for (var i = 0; i < genderList.length; i++) {
+                alert(i.firstName + " " + i.lastName);
+            }
+        } else {
+            return genderList;
         }
     }
     var knowAge = promptFor("Do you know the person's age?", yesNo);
-    if (knowAge == "yes") {
+    if (knowAge === "yes") {
         var personage = promptFor("What is the person's age?", chars);
-        var peopleList = searchByAge(people, personage);
-        if (peopleList.length == 1) {
-            var foundPerson = peopleList[0];
+        var ageList = searchByAge(people, personage);
+        if (ageList.length == 1) {
+            var foundPerson = ageList[0];
             return mainMenu(foundPerson);
+        }
+        var agelist = promptFor("Would you like to see a list of people by this age?", yesNo);
+        if (agelist === "yes") {
+            for (var i = 0; i < ageList.length; i++) {
+                alert(i.firstName + " " + i.lastName);
+            }
+        } else {
+            return ageList;
         }
     }
     var knowEyeColor = promptFor("Do you know the person's eyecolor? yes or no", yesNo);
     if (knowEyeColor == "yes") {
         var color = promptFor("What is the person's eyecolor?", chars).toLowerCase();
-        var peopleList = searchByEyeColor(people, color);
-        if (peopleList.length == 1) {
-            var foundPerson = peopleList[0];
+        var eyecolorList = searchByEyeColor(people, color);
+        if (eyecolorList.length == 1) {
+            var foundPerson = eyecolorList[0];
             return mainMenu(foundPerson);
+        }
+        var eyecolorlist = promptFor("Would you like to see a list of people by this eyecolor?", yesNo);
+        if (eyecolorlist === "yes") {
+            for (var i = 0; i < ageList.length; i++) {
+                alert(i.firstName + " " + i.lastName);
+            }
+        } else {
+            return eyecolorList;
         }
     }
     var knowWeight = promptFor("Do you know the person's weight? yes or no", yesNo);
     if (knowWeight == "yes") {
         var weight = promptFor("What is the person's weight?", chars).toLowerCase();
-        var peopleList = searchByWeight(people, weight);
-        if (peopleList.length == 1) {
-            var foundPerson = peopleList[0];
+        var weightList = searchByWeight(people, weight);
+        if (weightList.length == 1) {
+            var foundPerson = weightList[0];
             return mainMenu(foundPerson);
+        }
+
+        var weightlist = promptFor("Would you like to see a list of people by this weight?", yesNo);
+        if (weightlist === "yes") {
+            for (var i = 0; i < weightList.length; i++) {
+                alert(i.firstName + " " + i.lastName);
+            }
+        } else {
+            return weightList;
         }
     }
     var knowOccupation = promptFor("Do you know the person's occupation? yes or no", yesNo);
     if (knowOccupation == "yes") {
         var occupation = promptFor("What is the person's occupation?", chars);
-        var peopleList = searchByOccupation(people, occupation);
-        if (peopleList.length == 1) {
+        var occupationList = searchByOccupation(people, occupation);
+        if (occupationList.length == 1) {
             var foundPerson = peopleList[0];
             return mainMenu(foundPerson);
+        }
+
+        var occupationlist = promptFor("Would you like to see a list of people by this occupation?", yesNo);
+        if (occupationlist === "yes") {
+            for (var i = 0; i < occupationList.length; i++) {
+                alert(i.firstName + " " + i.lastName);
+            }
+        } else {
+            return occupationList;
         }
     }
 }
@@ -311,58 +386,4 @@ function yesNo(input) {
 
 function chars(input) {
     return true;
-}
-
-function searchByTrait(people) {
-    var singleTrait = promptFor("Which trait would you like to filter by?").toLowerCase();
-    if (singleTrait === "gender") {
-        var gender = promptFor("What gender?").toLowerCase();
-        searchByGender(people, gender);
-        var genderArray = searchByGender.genderArray;
-
-        var trait = gender;
-        var array = genderArray;
-        return array, trait;
-
-    }
-    if (singleTrait === "eyecolor" || "eye color") {
-        var eyeColor = promptFor("What eyecolor?").toLowerCase();
-        searchByEyeColor(people, eyeColor);
-        var eyeColorArray = searchByEyeColor.eyeColorArray;
-
-        var trait = eyeColor;
-        var array = eyeColorArray;
-        return array, trait;
-    }
-    if (singleTrait === "age") {
-        var personage = promptFor("What age?");
-        searchByAge(people, personage);
-        var ageArray = searchByAge.ageArray;
-
-        var trait = personage;
-        var array = ageArray;
-        return array, trait;
-    }
-    if (singleTrait === "weight") {
-        var weight = promptFor("What weight?");
-        searchByWeight(people, weight);
-        var weightArray = searchByWeight.weightArray;
-
-        var trait = weight;
-        var array = weightArray;
-        return array, trait;
-
-    }
-    if (singleTrait === "occupation") {
-        var occupation = promptFor("What occupation?");
-        searchByOccupation(people, occupation);
-        var occupationArray = searchByWeight.occupationArray;
-
-        var trait = occupation;
-        var array = occupationArray;
-        return array, trait;
-    }
-    if (singleTrait !== "gender" || "eyecolor" || "eye color" || "age" || "weight" || "occupation") {
-        return searchByTrait(people);
-    }
 }
