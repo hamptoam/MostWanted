@@ -9,7 +9,7 @@ function app(people) {
             mainMenu(foundPerson, people);
             break;
         case 'no':
-            var foundPerson = searchByTraits(people);
+            var foundPerson = oneOrMulti(people);
             mainMenu(foundPerson, people);
             break;
         default:
@@ -60,44 +60,78 @@ function searchByName(people) {
     return foundPerson[0];
 }
 
-function searchByTraits(people) {
+function oneOrMulti(people) {
+
+    var filterList = [];
 
     var personOrPeople = promptFor("Would you like to search for 'one' person, or 'multi'?").toLowerCase();
-    switch(personOrPeople) {
-        case "one": 
-        searchForPerson(people);
-        break;
-        case "multi": 
-        alert("You can choose from 2 to up to 5 traits to filter the lists by");
-        var traitGender = promptFor("Would you like to search by gender?", yesNo);  
-        var traitAge = promptFor("Would you like to search by age?", yesNo);
-        var traitEyeColor = promptFor("Would you like to search by eyecolor?", yesNo);
-        var traitWeight = promptFor("Would you like to search by weight?", yesNo);
-        var traitOccupation = promptFor("Would you like to search by occupation?", yesNo);
-
-        if(traitGender === "yes") {
-        var gender = promptFor("What is their gender?", chars).toLowerCase();
-        var genderList = searchByGender(people, gender);  
-        } 
-        if(traitAge === "yes") {
-        var personage = promptFor("What is the person's age?", chars);
-        var ageList = searchByAge(people, personage);
-        }
-        if(traitEyeColor === "yes") {
-        var personEyeColor = promptFor("What is the person's eyecolor?");
-        var eyeColorList = searchByEyeColor(people, personEyeColor);
-        }
-        if(traitWeight === "yes") {
-            var weight = promptFor("What is the person's weight?", chars).toLowerCase();
-            var weightList = searchByWeight(people, weight);
-        }
-        if(traitOccupation === "yes") {
-            var occupation = promptFor("What is the person's occupation?", chars);
-            var occupationList = searchByOccupation(people, occupation);
-        }
+    switch (personOrPeople) {
+        case "one":
+            searchForPerson(people);
+            break;
+        case "multi":
+            filterByTraits(people);
+            break;
     }
 }
 
+function filterByTraits(people) {
+
+    var filterArray = [];
+    var sortedArray = removeUniqueVariables.sortedArray;
+
+    alert("You can choose from 2 to up to 5 traits to filter the lists by");
+    var traitGender = promptFor("Would you like to search by gender?", yesNo);
+    var traitAge = promptFor("Would you like to search by age?", yesNo);
+    var traitEyeColor = promptFor("Would you like to search by eyecolor?", yesNo);
+    var traitWeight = promptFor("Would you like to search by weight?", yesNo);
+    var traitOccupation = promptFor("Would you like to search by occupation?", yesNo);
+
+    if (traitGender === "yes") {
+        var gender = promptFor("What is their gender?", chars).toLowerCase();
+        var genderList = searchByGender(people, gender);
+        filterArray.push(genderList);
+    }
+    if (traitAge === "yes") {
+        var personage = promptFor("What is the person's age?", chars);
+        var ageList = searchByAge(people, personage);
+        filterArray.push(ageList);
+    }
+    if (traitEyeColor === "yes") {
+        var personEyeColor = promptFor("What is the person's eyecolor?");
+        var eyeColorList = searchByEyeColor(people, personEyeColor);
+        filterArray.push(eyeColorList);
+    }
+    if (traitWeight === "yes") {
+        var weight = promptFor("What is the person's weight?", chars).toLowerCase();
+        var weightList = searchByWeight(people, weight);
+        filterArray.push(weightList);
+    }
+    if (traitOccupation === "yes") {
+        var occupation = promptFor("What is the person's occupation?", chars);
+        var occupationList = searchByOccupation(people, occupation);
+        filterArray.push(occupationList);
+    }
+    for(var i = 0; i < sortedArray.length; i++)
+    {
+        alert("Results: " + i.firstName + " " + i.lastName);
+    }
+    return app();
+}
+
+function removeUniqueVariables() {
+    var reduceList = filterByTraits.filterArray;
+    var sortedList = reduceList.slice().sort();
+
+    var sortedArray = [];
+    for (var i = 0; i < sortedList.length - 1; i++) {
+        if (sortedList[i + 1] == sortedList[i]) {
+            sortedArray.push(sortedList[i]);
+        }
+    }
+    console.log(sortedArray);
+    return sortedArray;
+}
 
 function searchForPerson(people) {
 
@@ -277,7 +311,7 @@ function findSiblings(foundPerson, people, foundSiblings = []) {
     var siblings = foundSiblings.forEach(function (sibling) {
         alert("Sibling: " + sibling.firstName + " " + sibling.lastName);
     });
-    return displayFamily(foundPerson, people);
+    return displayFamily(foundPerson, siblings);
 }
 
 function findParents(foundPerson, people, foundParents = []) {
